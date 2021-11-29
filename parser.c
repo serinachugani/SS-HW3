@@ -367,7 +367,7 @@ void procDecl(lexeme *list, int level)
 			error;
 		
 		index++;
-		emit RTN;
+		emit(2, 0, 0);
 			
 }
 
@@ -503,37 +503,37 @@ void condition(lexeme *list, int level)
 		{
 			index++;
 			expression(list, level);
-			emit EQL;
+			emit(2, 0, 8);
 		}
 		if (list[index].type == neqsym)
 		{
 			index++;
 			expression(list, level);
-			emit NEQ;
+			emit(2, 0, 9);
 		}
 		if (list[index].type == lsssym)
 		{
 			index++;
 			expression(list, level);
-			emit LSS;
+			emit(2, 0, 10);
 		}
 		if (list[index].type == leqsym)
 		{
 			index++;
 			expression(list, level);
-			emit LEQ;
+			emit(2, 0, 11);
 		}
 		if (list[index].type == gtrsym)
 		{
 			index++;
 			expression(list, level);
-			emit GTR;
+			emit(2, 0, 12);
 		}
 		if (list[index].type == geqsym)
 		{
 			index++;
 			expression(list, level);
-			emit GEQ;
+			emit(2, 0, 13);
 		}
 		else
 			error;
@@ -597,8 +597,8 @@ void expression(lexeme *list, int level)
 				emit(2, 0, 3);
 			}
 		}
-		// If token is +, -, *, /, %, (, identifier, number, or odd, print error.
-		if (list[index].type == addsym || list[index].type == subsym || list[index].type == multsym || list[index].type == divsym || list[index].type == modsym || list[index].type == lparensym || list[index].type == identsym, list[index].type == numbersym || list[index].type == oddsym)
+		// If token is (, identifier, number, or odd, print error.
+		if (list[index].type == lparensym || list[index].type == identsym, list[index].type == numbersym || list[index].type == oddsym)
 		{
 			printparseerror(17);
 		}
