@@ -422,7 +422,7 @@ void statement(lexeme *list, int level)
 			    error
 		}
 		get next token
-		emit CAL(L = level - table[symIdx].level, symIdx)
+		emit CAL(L = level - table[symIdx].level, table[symIdx].addr)
 	}			    
 }
 
