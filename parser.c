@@ -312,7 +312,118 @@ void procDecl(lexeme *list, int level)
 
 void statement(lexeme *list, int level)
 {
-	
+	if (token == identsym)
+	{
+		symIdx = findSymbol(token, 2);
+		if (symIdx == -1)
+		{
+			if (findSymbol(token, 1) != findSymbol(token,3))
+			{
+				error
+			}
+			else
+			{
+				error
+			}
+		}
+		get next token
+		if (token != assignsym)
+			error
+		get next token
+		expression
+		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr)
+		return;
+	}
+	if (token == beginsym)
+	{
+		do {
+			get next token
+			statement
+		} while (token == semicolonsym)
+		if (token != endsym)
+		{
+			if (token == identsym, beginsym, ifsym, whilesym, readsym, writesym, callsym)
+				error
+			else
+				error
+		}
+		get next token
+		return;
+	}
+	if (token == ifsym)
+	{
+		get next token
+		condition
+		jpcIdx = current code index;
+		emit JPC;
+		if (token == elsesym)
+		{
+			jmpIdx = current code index;
+			emit JMP;
+			code[jpcIdx].m = current code index * 3;
+			statement
+			code[jmpIdx].m = current code index * 3;
+		}
+		else 
+		{
+			code[jpcIdx].m = current code index * 3;
+		}
+		return;
+	}
+	if (token == whilesym)
+	{
+		get next token
+		loopIdx = current code index;
+		condition
+		if (token != dosym)
+			error
+		get next token
+		jpcIdx = current code index
+		emit JPC
+		statement
+		emit JMP M = loopIdx * 3;
+		code[jpcIdx].m = current code index * 3;
+		return;
+	}
+	if (token == readsym)
+	{
+		get next token
+		if (token != identsym)
+			error
+		symIdx = findSymbol(token, 2);
+		if (symIdx == -1)
+		{
+			if (findSymbol(token, 1) != findSymbol(token, 3)
+			    error
+			else
+			    error
+		}
+		get next token
+		emit READ
+		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr)
+		return;
+	}
+	if (token == writesym)
+	{
+		get next token
+		expression
+		emit WRITE
+		return;
+	}
+	if (token == callsym)
+	{
+		get next token
+		symIdx = findSymbol(token, 3);
+		if (symIdx == -1)
+		{
+			if (findSymbol(token,1) != findSymbol(token,2)
+			    error
+			else
+			    error
+		}
+		get next token
+		emit CAL(L = level - table[symIdx].level, symIdx)
+	}			    
 }
 
 void condition(lexeme *list, int level)
