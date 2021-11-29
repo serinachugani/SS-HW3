@@ -379,10 +379,10 @@ void statement(lexeme *list)
 {
 	if (list[listIndex].type == identsym)
 	{
-		symIdx = findSymbol(token, 2);
+		symIdx = findSymbol(list[listIndex].name, 2);
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[listIndex], 1) != findSymbol(list[listIndex],3))
+			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name,3))
 			{
 				error = 1;
 				return;
@@ -473,10 +473,10 @@ void statement(lexeme *list)
 			error = 1;
 			return;
 		}
-		symIdx = findSymbol(list[listIndex], 2);
+		symIdx = findSymbol(list[listIndex].name, 2);
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[listIndex], 1) != findSymbol(list[listIndex], 3))
+			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
 			{
 				error = 1;
 				return;
@@ -502,10 +502,10 @@ void statement(lexeme *list)
 	if (list[listIndex].type == callsym)
 	{
 		listIndex++;
-		symIdx = findSymbol(list[listIndex], 3);
+		symIdx = findSymbol(list[listIndex].name, 3);
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[listIndex], 1) != findSymbol(list[listIndex], 2))
+			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 2))
 			{
 				error = 1;
 				return;
@@ -675,13 +675,34 @@ void factor(lexeme *list)
 	}
 }
 
-void findSymbol(char *name, int kind)
+int findSymbol(char *name, int kind)
 {
+	int symIdx = -1;
 	for (int i = 0; i < symbol_table.length; i++)
 	{
-		if (strcmp(symbol_table[i].name, name) == 0 && symbol_table[i].kind == kind && symbol_table[i] == unmarked)
+		if (strcmp(symbol_table[i].name, name) == 0 && symbol_table[i].kind == kind && symbol_table[i].mark == 0)
 		{
-			
+			symIdx = i;
+		}
+	}
+	level = maxLevel;
+	return symIdx;
+}
+	
+void mark()
+{
+	for (int i = symbol_table.length; i >= 0; i--)
+	{
+		if (symbol_table[i].mark = 0)
+		{
+			if (symbol_table[i].level < level)
+			{
+				return;
+			}
+			if (symbol_table[i].level == level)
+			{
+				symbol_table[i].mark = 1;
+			}
 		}
 	}
 }
