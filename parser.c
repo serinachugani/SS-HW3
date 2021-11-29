@@ -534,4 +534,10 @@ void factor(lexeme *list, int level)
 	}
 }
 
+void findSymbol()
+{
+	
+}
+				    
+
 
