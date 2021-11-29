@@ -712,11 +712,6 @@ void expression(lexeme *list)
 
 void term(lexeme *list)
 {
-	
-}
-
-void factor(lexeme *list)
-{
 	// Call factor
 	factor(list, level);
 	if (error == 1)
@@ -753,6 +748,11 @@ void factor(lexeme *list)
 			emit(2, 0, 7);
 		}
 	}
+}
+
+void factor(lexeme *list)
+{
+
 }
 
 int findSymbol(char *name, int kind)
