@@ -361,7 +361,7 @@ void procDecl(lexeme *list, int level)
 		
 		index;
 		
-		BLOCK;		//will fix too dw
+		block(list, level);
 		
 		if (list[index].type != semicolonsym)
 			error;
