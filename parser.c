@@ -30,7 +30,7 @@ void expression(lexeme *list);
 void term(lexeme *list);
 void factor(lexeme *list);
 int multipleDeclarationCheck(char n[]);
-int findSymbol(char n[], int kind);
+int findSymbol(char* n, int kind);
 void mark();
 
 instruction *parse(lexeme *list, int printTable, int printCode)
@@ -546,28 +546,28 @@ void condition(lexeme *list)
 void expression(lexeme *list)
 {
 	// If token is a subtract symbol
-	if (list[index].type == subsym)
+	if (list[listIndex].type == subsym)
 	{
-		index++;
+		listIndex++;
 		//Call term
 		term(list, level);
 		// Add NEG instruction to code array
 		emit(2, 0, 1);
 		
 		// While token is an add symbol or substract symbol
-		while (list[index].type == addsym || list[index].type == subsym)
+		while (list[listIndex].type == addsym || list[listIndex].type == subsym)
 		{	
 			// If token is an add symbol, go to next token, call term, and add ADD instruction to code array
-			if (list[index].type == addsym)
+			if (list[listIndex].type == addsym)
 			{
-				index++;
+				listIndex++;
 				term(list, level);
 				emit(2, 0, 2);
 			}
 			// Else, go to next token, call term, and add SUB instruction to code array
 			else
 			{
-				index++;
+				listIndex++;
 				term(list, level);
 				emit(2, 0, 3);
 			}
@@ -576,33 +576,33 @@ void expression(lexeme *list)
 	else
 	{
 		// If token is an add symbol, go to next token
-		if (list[index].type == addsym)
+		if (list[listIndex].type == addsym)
 		{
-			index++;
+			listIndex++;
 		}
 		// Call term
 		term(list, level);
 		
 		// While token is an add symbol or subtract symbol
-		while (list[index].type == addsym || list[index].type == subsym)
+		while (list[listIndex].type == addsym || list[listIndex].type == subsym)
 		{
 			// If token is an add symbol, go to next token, call term, and add ADD instruction to code array
-			if (list[index].type == addsym)
+			if (list[listIndex].type == addsym)
 			{
-				index++;
+				listIndex++;
 				term(list, level);
 				emit(2, 0, 2);
 			}
 			// Else, go to token, call term, and add SUB instruction to code array
 			else
 			{
-				index++;
+				listIndex++;
 				term(list, level);
 				emit(2, 0, 3);
 			}
 		}
 		// If token is (, identifier, number, or odd, print error.
-		if (list[index].type == lparensym || list[index].type == identsym, list[index].type == numbersym || list[index].type == oddsym)
+		if (list[listIndex].type == lparensym || list[listIndex].type == identsym, list[listIndex].type == numbersym || list[listIndex].type == oddsym)
 		{
 			printparseerror(17);
 		}
@@ -620,26 +620,26 @@ void factor(lexeme *list)
 	factor(list, level);
 	
 	// While token is a multiplication symbol, dividing symbol, or mod symbol
-	while (list[index].type == multsym || list[index].type == divsym || list[index].type == modsym)
+	while (list[listIndex].type == multsym || list[listIndex].type == divsym || list[listIndex].type == modsym)
 	{
 		// If token is a multiplication symbol, go to next token, call factor, and add MUL to code array
-		if (list[index].type == multsym)
+		if (list[listIndex].type == multsym)
 		{
-			index++;
+			listIndex++;
 			factor(list, level);
 			emit(2, 0, 4);
 		}
 		// If token is a dividing symbol, go to next token, call factor, and add DIV to code array
-		else if (list[index].type == divsym)
+		else if (list[listIndex].type == divsym)
 		{
-			index++;
+			listIndex++;
 			factor(list, level);
 			emit(2, 0, 5);
 		}
 		// Else, go to next token, call factor, and add MOD to code array
 		else
 		{
-			index++;
+			listIndex++;
 			factor(list, level);
 			emit(2, 0, 7);
 		}
