@@ -10,7 +10,7 @@ instruction *code;
 int cIndex;
 symbol *table;
 int tIndex;
-int index; // Used to keep track of index in list.
+int listIndex; // Used to keep track of index in list.
 int error; // Checks if error has been encountered.
 
 void emit(int opname, int level, int mvalue);
@@ -38,7 +38,7 @@ instruction *parse(lexeme *list, int printTable, int printCode)
 		WHEN COPYING IT TO THE PAS*/
 	cIndex = 0;
 	tIndex = 0;
-	index = 0;
+	listIndex = 0;
 	
 	
 	code[cIndex].opcode = -1;
