@@ -377,117 +377,146 @@ void procDecl(lexeme *list, int level)
 
 void statement(lexeme *list)
 {
-	if (list[index].type == identsym)
+	if (list[listIndex].type == identsym)
 	{
 		symIdx = findSymbol(token, 2);
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[index], 1) != findSymbol(list[index],3))
+			if (findSymbol(list[listIndex], 1) != findSymbol(list[listIndex],3))
 			{
-				error;
+				error = 1;
+				return;
 			}
 			else
 			{
-				error;
+				error = 1;
+				return;
 			}
 		}
-		index++;
-		if (list[index].type != assignsym)
-			error;
-		index++;
+		listIndex++;
+		if (list[listIndex].type != assignsym)
+		{
+			error = 1;
+			return;
+		}
+		listIndex++;
 		expression(list, level);
 		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr);
 		return;
 	}
-	if (list[index].type == beginsym)
+	if (list[listIndex].type == beginsym)
 	{
 		do {
-			index++;
+			listIndex++;
 			statement(list, level);
-		} while (list[index].type == semicolonsym)
-		if (list[index].type != endsym)
+		} while (list[listIndex].type == semicolonsym)
+		if (list[listIndex].type != endsym)
 		{
-			if (list[index].type == identsym || list[index].type == beginsym || list[index].type == ifsym || list[index].type == whilesym 
-			    || list[index].type == readsym || list[index].type == writesym || list[index].type == callsym)
-				error;
+			if (list[listIndex].type == identsym || list[listIndex].type == beginsym || list[listIndex].type == ifsym || list[listIndex].type == whilesym 
+			    || list[listIndex].type == readsym || list[listIndex].type == writesym || list[listIndex].type == callsym)
+			{
+				error = 1;
+				return;
+			}
 			else
-				error;
+			{
+				error = 1;
+				return;
+			}
 		}
-		index++;
+		listIndex++;
 		return;
 	}
-	if (list[index].type == ifsym)
+	if (list[listIndex].type == ifsym)
 	{
-		index++;
+		listIndex++;
 		condition(list, level);
-		jpcIdx = current code index;
+		jpcIdx = listIndex;
 		emit JPC;
-		if (list[index].type == elsesym)
+		if (list[listIndex].type == elsesym)
 		{
-			jmpIdx = current code index;
+			jmpIdx = listIndex;
 			emit JMP;
-			code[jpcIdx].m = current code index * 3;
+			code[jpcIdx].m = listIndex * 3;
 			statement(list, level);
-			code[jmpIdx].m = current code index * 3;
+			code[jmpIdx].m = listIndex * 3;
 		}
 		else 
 		{
-			code[jpcIdx].m = current code index * 3;
+			code[jpcIdx].m = listIndex * 3;
 		}
 		return;
 	}
-	if (list[index].type == whilesym)
+	if (list[listIndex].type == whilesym)
 	{
-		index++;
-		loopIdx = current code index;
+		listIndex++;
+		loopIdx = listIndex;
 		condition(list, level);
-		if (list[index].type != dosym)
-			error;
-		index++;
-		jpcIdx = current code index;
+		if (list[listIndex].type != dosym)
+		{
+			error = 1;
+			return;
+		}
+		listIndex++;
+		jpcIdx = listIndex;
 		emit JPC;
 		statement(list, level);
 		emit JMP M = loopIdx * 3;
-		code[jpcIdx].m = current code index * 3;
+		code[jpcIdx].m = listIndex * 3;
 		return;
 	}
-	if (list[index].type == readsym)
+	if (list[listIndex].type == readsym)
 	{
-		index++;
-		if (list[index].type != identsym)
-			error;
-		symIdx = findSymbol(list[index], 2);
+		listIndex++;
+		if (list[listIndex].type != identsym)
+		{
+			error = 1;
+			return;
+		}
+		symIdx = findSymbol(list[listIndex], 2);
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[index], 1) != findSymbol(list[index], 3)
-			    error;
+			if (findSymbol(list[listIndex], 1) != findSymbol(list[listIndex], 3))
+			{
+				error = 1;
+				return;
+			}
 			else
-			    error;
+			{
+				error = 1;
+				return;
+			}
 		}
-		index++;
+		listIndex++;
 		emit READ;
 		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr);
 		return;
 	}
-	if (list[index].type == writesym)
+	if (list[listIndex].type == writesym)
 	{
-		index++;
+		listIndex++;
 		expression(list, level);
 		emit WRITE;
 		return;
 	}
-	if (list[index].type == callsym)
+	if (list[listIndex].type == callsym)
 	{
-		index++;
-		symIdx = findSymbol(list[index], 3);
+		listIndex++;
+		symIdx = findSymbol(list[listIndex], 3);
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[index], 1) != findSymbol(list[index], 2)
-			    error;
+			if (findSymbol(list[listIndex], 1) != findSymbol(list[listIndex], 2))
+			{
+				error = 1;
+				return;
+			}
 			else
-			    error;
+			{
+				error = 1;
+				return;
+			}
 		}
-		index++;
+		listIndex++;
 		emit CAL(L = level - table[symIdx].level, symIdx);
 	}			    
 }
