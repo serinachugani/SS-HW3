@@ -490,7 +490,53 @@ void statement(lexeme *list, int level)
 
 void condition(lexeme *list, int level)
 {
-	
+	if (list[index].type == oddsym)
+	{
+		index;
+		expression(list, level);
+		emit ODD;
+	}
+	else
+	{
+		expression(list, level);
+		if (list[index].type == eqlsym)
+		{
+			index++;
+			expression(list, level);
+			emit EQL;
+		}
+		if (list[index].type == neqsym)
+		{
+			index++;
+			expression(list, level);
+			emit NEQ;
+		}
+		if (list[index].type == lsssym)
+		{
+			index++;
+			expression(list, level);
+			emit LSS;
+		}
+		if (list[index].type == leqsym)
+		{
+			index++;
+			expression(list, level);
+			emit LEQ;
+		}
+		if (list[index].type == gtrsym)
+		{
+			index++;
+			expression(list, level);
+			emit GTR;
+		}
+		if (list[index].type == geqsym)
+		{
+			index++;
+			expression(list, level);
+			emit GEQ;
+		}
+		else
+			error;
 }
 
 void expression(lexeme *list, int level)
