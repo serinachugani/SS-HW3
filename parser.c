@@ -319,41 +319,41 @@ void statement(lexeme *list, int level)
 		{
 			if (findSymbol(token, 1) != findSymbol(token,3))
 			{
-				error
+				error;
 			}
 			else
 			{
-				error
+				error;
 			}
 		}
-		get next token
+		get next token;
 		if (token != assignsym)
-			error
-		get next token
-		expression
-		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr)
+			error;
+		get next token;
+		expression(list, level);
+		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr);
 		return;
 	}
 	if (token == beginsym)
 	{
 		do {
-			get next token
-			statement
+			get next token;
+			statement(list, level);
 		} while (token == semicolonsym)
 		if (token != endsym)
 		{
 			if (token == identsym, beginsym, ifsym, whilesym, readsym, writesym, callsym)
-				error
+				error;
 			else
-				error
+				error;
 		}
-		get next token
+		get next token;
 		return;
 	}
 	if (token == ifsym)
 	{
-		get next token
-		condition
+		get next token;
+		condition(list, level);
 		jpcIdx = current code index;
 		emit JPC;
 		if (token == elsesym)
@@ -361,7 +361,7 @@ void statement(lexeme *list, int level)
 			jmpIdx = current code index;
 			emit JMP;
 			code[jpcIdx].m = current code index * 3;
-			statement
+			statement(list, level);
 			code[jmpIdx].m = current code index * 3;
 		}
 		else 
@@ -372,57 +372,57 @@ void statement(lexeme *list, int level)
 	}
 	if (token == whilesym)
 	{
-		get next token
+		get next token;
 		loopIdx = current code index;
-		condition
+		condition(list, level);
 		if (token != dosym)
-			error
-		get next token
-		jpcIdx = current code index
-		emit JPC
-		statement
+			error;
+		get next token;
+		jpcIdx = current code index;
+		emit JPC;
+		statement(list, level);
 		emit JMP M = loopIdx * 3;
 		code[jpcIdx].m = current code index * 3;
 		return;
 	}
 	if (token == readsym)
 	{
-		get next token
+		get next token;
 		if (token != identsym)
-			error
+			error;
 		symIdx = findSymbol(token, 2);
 		if (symIdx == -1)
 		{
 			if (findSymbol(token, 1) != findSymbol(token, 3)
-			    error
+			    error;
 			else
-			    error
+			    error;
 		}
-		get next token
-		emit READ
-		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr)
+		get next token;
+		emit READ;
+		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr);
 		return;
 	}
 	if (token == writesym)
 	{
-		get next token
-		expression
-		emit WRITE
+		get next token;
+		expression(list, level);
+		emit WRITE;
 		return;
 	}
 	if (token == callsym)
 	{
-		get next token
+		get next token;
 		symIdx = findSymbol(token, 3);
 		if (symIdx == -1)
 		{
-			if (findSymbol(token,1) != findSymbol(token,2)
-			    error
+			if (findSymbol(token, 1) != findSymbol(token, 2)
+			    error;
 			else
-			    error
+			    error;
 		}
-		get next token
-		emit CAL(L = level - table[symIdx].level, symIdx)
+		get next token;
+		emit CAL(L = level - table[symIdx].level, symIdx);
 	}			    
 }
 
