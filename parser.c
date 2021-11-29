@@ -307,7 +307,34 @@ int varDecl(lexeme *list, int level)
 
 void procDecl(lexeme *list, int level)
 {
-	
+	while (list[index].type == procsym)	//so im not sure how much of this is supposed to be in the while loop based on the pseudocode so i just put all of it
+	{
+		index++;
+		
+		if (list[index].type != identsym)
+			error;		//need to go back and fix this
+		
+		symidx = multipleDeclarationCheck(list[index].type);	//also might need to fix this bc idk how the function works
+		
+		if (symidx != -1)
+			error;
+		
+		addToSymbolTable(3, indent, 0, level, 0, unmarked)
+		index++;
+		
+		if (list[index].type != semicolonsym)
+			error;
+		
+		index;
+		
+		BLOCK;		//will fix too dw
+		
+		if (list[index].type != semicolonsym)
+			error;
+		
+		index++;
+		emit RTN;
+			
 }
 
 void statement(lexeme *list, int level)
