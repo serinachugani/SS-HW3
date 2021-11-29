@@ -535,9 +535,15 @@ void factor(lexeme *list, int level)
 	}
 }
 
-void findSymbol()
+void findSymbol(char *name, int kind)
 {
-	
+	for (int i = 0; i < symbol_table.length; i++)
+	{
+		if (strcmp(symbol_table[i].name, name) == 0 && symbol_table[i].kind == kind && symbol_table[i] == unmarked)
+		{
+			
+		}
+	}
 }
 				    
 
