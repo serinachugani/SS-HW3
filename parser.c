@@ -10,7 +10,8 @@ instruction *code;
 int cIndex;
 symbol *table;
 int tIndex;
-int index; //Used to keep track of index in list.
+int index; // Used to keep track of index in list.
+int error; // Checks if error has been encountered.
 
 void emit(int opname, int level, int mvalue);
 void addToSymbolTable(int k, char n[], int v, int l, int a, int m);
@@ -256,3 +257,170 @@ void printassemblycode()
 	if (table != NULL)
 		free(table);
 }
+
+void program(lexeme *list, int level)
+{
+	
+}
+
+void block(lexeme *list, int level)
+{
+	level++;
+
+	int procedure_idx = tIndex - 1;
+	
+	// Call each of the declarations.
+	constDecl(list, level);
+	
+	int x = varDecl(list, level);
+	
+	procDecl(list, level);
+
+	table[procedure_idx].addr = cIndex * 3;
+	
+	// If level is 0, add INC instruction to code array with M = x
+	if (level == 0)
+	{
+		emit(6, 0, x);
+	}
+	// Else, add INC instruction to code array with M = x + 3
+	else
+	{
+		emit(6, 0, x + 3);
+	}
+	
+	// Call statement
+	statement(list, level);
+	MARK; //FIXXXXX
+	level--;
+}
+
+void constDecl(lexeme *list, int level)
+{
+	
+}
+
+int varDecl(lexeme *list, int level)
+{
+	
+}
+
+void procDecl(lexeme *list, int level)
+{
+	
+}
+
+void statement(lexeme *list, int level)
+{
+	
+}
+
+void condition(lexeme *list, int level)
+{
+	
+}
+
+void expression(lexeme *list, int level)
+{
+	// If token is a subtract symbol
+	if (list[index].type == subsym)
+	{
+		index++;
+		//Call term
+		term(list, level);
+		// Add NEG instruction to code array
+		emit(2, 0, 1);
+		
+		// While token is an add symbol or substract symbol
+		while (list[index].type == addsym || list[index].type == subsym)
+		{	
+			// If token is an add symbol, go to next token, call term, and add ADD instruction to code array
+			if (list[index].type == addsym)
+			{
+				index++;
+				term(list, level);
+				emit(2, 0, 2);
+			}
+			// Else, go to next token, call term, and add SUB instruction to code array
+			else
+			{
+				index++;
+				term(list, level);
+				emit(2, 0, 3);
+			}
+		}
+	}
+	else
+	{
+		// If token is an add symbol, go to next token
+		if (list[index].type == addsym)
+		{
+			index++;
+		}
+		// Call term
+		term(list, level);
+		
+		// While token is an add symbol or subtract symbol
+		while (list[index].type == addsym || list[index].type == subsym)
+		{
+			// If token is an add symbol, go to next token, call term, and add ADD instruction to code array
+			if (list[index].type == addsym)
+			{
+				index++;
+				term(list, level);
+				emit(2, 0, 2);
+			}
+			// Else, go to token, call term, and add SUB instruction to code array
+			else
+			{
+				index++;
+				term(list, level);
+				emit(2, 0, 3);
+			}
+		}
+		// If token is (, identifier, number, or odd, print error.
+		if (list[index].type == lparensym || list[index].type == identsym, list[index].type == numbersym || list[index].type == oddsym)
+		{
+			printparseerror(17);
+		}
+	}
+}
+
+void term(lexeme *list, int level)
+{
+	
+}
+
+void factor(lexeme *list, int level)
+{
+	// Call factor
+	factor(list, level);
+	
+	// While token is a multiplication symbol, dividing symbol, or mod symbol
+	while (list[index].type == multsym || list[index].type == divsym || list[index].type == modsym)
+	{
+		// If token is a multiplication symbol, go to next token, call factor, and add MUL to code array
+		if (list[index].type == multsym)
+		{
+			index++;
+			factor(list, level);
+			emit(2, 0, 4);
+		}
+		// If token is a dividing symbol, go to next token, call factor, and add DIV to code array
+		else if (list[index].type == divsym)
+		{
+			index++;
+			factor(list, level);
+			emit(2, 0, 5);
+		}
+		// Else, go to next token, call factor, and add MOD to code array
+		else
+		{
+			index++;
+			factor(list, level);
+			emit(2, 0, 7);
+		}
+	}
+}
+
+
