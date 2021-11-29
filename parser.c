@@ -10,22 +10,38 @@ instruction *code;
 int cIndex;
 symbol *table;
 int tIndex;
+int index; //Used to keep track of index in list.
 
 void emit(int opname, int level, int mvalue);
 void addToSymbolTable(int k, char n[], int v, int l, int a, int m);
 void printparseerror(int err_code);
 void printsymboltable();
 void printassemblycode();
+void program(lexeme *list, int level);
+void block(lexeme *list, int level);
+void constDecl(lexeme *list, int level);
+int varDecl(lexeme *list, int level);
+void procDecl(lexeme *list, int level);
+void statement(lexeme *list, int level);
+void condition(lexeme *list, int level);
+void expression(lexeme *list, int level);
+void term(lexeme *list, int level);
+void factor(lexeme *list, int level);
 
 instruction *parse(lexeme *list, int printTable, int printCode)
 {
 	code = NULL;
-	/* this line is EXTREMELY IMPORTANT, you MUST uncomment it
+	/*this line is EXTREMELY IMPORTANT, you MUST uncomment it
 		when you test your code otherwise IT WILL SEGFAULT in 
 		vm.o THIS LINE IS HOW THE VM KNOWS WHERE THE CODE ENDS
-		WHEN COPYING IT TO THE PAS
+		WHEN COPYING IT TO THE PAS*/
+	cIndex = 0;
+	tIndex = 0;
+	index = 0;
+	
+	
 	code[cIndex].opcode = -1;
-	*/
+	
 	return code;
 }
 
