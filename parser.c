@@ -312,12 +312,12 @@ void procDecl(lexeme *list, int level)
 
 void statement(lexeme *list, int level)
 {
-	if (token == identsym)
+	if (list[index].type == identsym)
 	{
 		symIdx = findSymbol(token, 2);
 		if (symIdx == -1)
 		{
-			if (findSymbol(token, 1) != findSymbol(token,3))
+			if (findSymbol(list[index], 1) != findSymbol(list[index],3))
 			{
 				error;
 			}
@@ -326,37 +326,38 @@ void statement(lexeme *list, int level)
 				error;
 			}
 		}
-		get next token;
-		if (token != assignsym)
+		index++;
+		if (list[index].type != assignsym)
 			error;
-		get next token;
+		index++;
 		expression(list, level);
 		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr);
 		return;
 	}
-	if (token == beginsym)
+	if (list[index].type == beginsym)
 	{
 		do {
-			get next token;
+			index++;
 			statement(list, level);
-		} while (token == semicolonsym)
-		if (token != endsym)
+		} while (list[index].type == semicolonsym)
+		if (list[index].type != endsym)
 		{
-			if (token == identsym, beginsym, ifsym, whilesym, readsym, writesym, callsym)
+			if (list[index].type == identsym || list[index].type == beginsym || list[index].type == ifsym || list[index].type == whilesym 
+			    || list[index].type == readsym || list[index].type == writesym || list[index].type == callsym)
 				error;
 			else
 				error;
 		}
-		get next token;
+		index++;
 		return;
 	}
-	if (token == ifsym)
+	if (list[index].type == ifsym)
 	{
-		get next token;
+		index++;
 		condition(list, level);
 		jpcIdx = current code index;
 		emit JPC;
-		if (token == elsesym)
+		if (list[index].type == elsesym)
 		{
 			jmpIdx = current code index;
 			emit JMP;
@@ -370,14 +371,14 @@ void statement(lexeme *list, int level)
 		}
 		return;
 	}
-	if (token == whilesym)
+	if (list[index].type == whilesym)
 	{
-		get next token;
+		index++;
 		loopIdx = current code index;
 		condition(list, level);
-		if (token != dosym)
+		if (list[index].type != dosym)
 			error;
-		get next token;
+		index++;
 		jpcIdx = current code index;
 		emit JPC;
 		statement(list, level);
@@ -385,43 +386,43 @@ void statement(lexeme *list, int level)
 		code[jpcIdx].m = current code index * 3;
 		return;
 	}
-	if (token == readsym)
+	if (list[index].type == readsym)
 	{
-		get next token;
-		if (token != identsym)
+		index++;
+		if (list[index].type != identsym)
 			error;
-		symIdx = findSymbol(token, 2);
+		symIdx = findSymbol(list[index], 2);
 		if (symIdx == -1)
 		{
-			if (findSymbol(token, 1) != findSymbol(token, 3)
+			if (findSymbol(list[index], 1) != findSymbol(list[index], 3)
 			    error;
 			else
 			    error;
 		}
-		get next token;
+		index++;
 		emit READ;
 		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr);
 		return;
 	}
-	if (token == writesym)
+	if (list[index].type == writesym)
 	{
-		get next token;
+		index++;
 		expression(list, level);
 		emit WRITE;
 		return;
 	}
-	if (token == callsym)
+	if (list[index].type == callsym)
 	{
-		get next token;
-		symIdx = findSymbol(token, 3);
+		index++;
+		symIdx = findSymbol(list[index], 3);
 		if (symIdx == -1)
 		{
-			if (findSymbol(token, 1) != findSymbol(token, 2)
+			if (findSymbol(list[index], 1) != findSymbol(list[index], 2)
 			    error;
 			else
 			    error;
 		}
-		get next token;
+		index++;
 		emit CAL(L = level - table[symIdx].level, symIdx);
 	}			    
 }
