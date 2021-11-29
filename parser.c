@@ -678,9 +678,9 @@ void factor(lexeme *list)
 int findSymbol(char *name, int kind)
 {
 	int symIdx = -1;
-	for (int i = 0; i < symbol_table.length; i++)
+	for (int i = 0; i < table.length; i++)
 	{
-		if (strcmp(symbol_table[i].name, name) == 0 && symbol_table[i].kind == kind && symbol_table[i].mark == 0)
+		if (strcmp(table[i].name, name) == 0 && table[i].kind == kind && table[i].mark == 0)
 		{
 			symIdx = i;
 		}
@@ -691,17 +691,17 @@ int findSymbol(char *name, int kind)
 	
 void mark()
 {
-	for (int i = symbol_table.length; i >= 0; i--)
+	for (int i = table.length; i >= 0; i--)
 	{
-		if (symbol_table[i].mark = 0)
+		if (table[i].mark = 0)
 		{
-			if (symbol_table[i].level < level)
+			if (table[i].level < level)
 			{
 				return;
 			}
-			if (symbol_table[i].level == level)
+			if (table[i].level == level)
 			{
-				symbol_table[i].mark = 1;
+				table[i].mark = 1;
 			}
 		}
 	}
