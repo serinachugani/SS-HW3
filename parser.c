@@ -302,7 +302,41 @@ void constDecl(lexeme *list, int level)
 
 int varDecl(lexeme *list, int level)
 {
+	numVars = 0;
+	if (list[index].type == varsym)
+		do
+		{
+			numVars++;
+			index++;
+			
+			if (list[index].type != identsym)
+				error;
+			
+			symidx = multipleDeclarationCheck(list[index].type);
+			
+			if (symidx != -1)
+				error;
+			if (level == 0)
+				addToSymbolTable(2, ident, 0, level, numVars - 1, unmarked);
+			else
+				addToSymbolTable(2, ident, 0, level, numVars + 2, unmarked);
+			index++;
+		}
 	
+	while (list[index].type == commasym)
+	{
+		if (list[index].type != semicolonsym)
+		{
+			if (list[index].type == identsym)
+				error;
+			else
+				error;
+		}
+	
+		index;
+	}
+	
+	return numVars;
 }
 
 void procDecl(lexeme *list, int level)
