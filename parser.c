@@ -323,7 +323,41 @@ void block(lexeme *list)
 
 void constDecl(lexeme *list)
 {
-	
+	if (list[listIndex].type == const)
+		do
+		{
+			listIndex++;
+			
+			if (list[listIndex].type != identsym)
+				error;
+			
+			symidx = multipleDeclarationCheck(list[listIndex].type);
+			
+			if (symidx != -1)
+				error;
+			// save indent name
+			listIndex++;
+			
+			if (list[listIndex].type != assignsym)
+				error;
+			listIndex++;
+			
+			if (list[listIndex].type != numbersym)
+				error;
+			
+			addToSymbolTable(1, saved name, number, level, 0, 0);
+			listIndex++;
+			
+		}
+	while (list[listIndex].type != commasym)
+	{
+		if (list[listIndex].type != semicolonsym)
+			if (list[listIndex].type == identsym)
+				error;
+			else
+				error;
+		listIndex++;
+	}
 }
 
 int varDecl(lexeme *list)
