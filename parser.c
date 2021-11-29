@@ -264,7 +264,27 @@ void printassemblycode()
 
 void program(lexeme *list)
 {
-	
+	emit(7, 0, 0);
+	addToSymbolTable(3, "main", 0, 0, 0, 0);
+	level = -1;
+	block(list);
+	if (error == 1)
+		return;
+	if (list[listIndex].type != periodsym)
+	{
+		printparseerror(1);
+		error = 1;
+		return;
+	}
+	emit(9, 0, 3);
+	for (int i = 0; i < cIndex; i++)
+	{
+		if (code[i].opcode == 5)
+		{
+			code[i].m = table[code[i].m].addr;
+		}
+	}
+	code[0].m = table[0].addr;
 }
 
 void block(lexeme *list)
