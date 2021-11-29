@@ -295,7 +295,9 @@ void block(lexeme *list)
 	
 	// Call statement
 	statement(list, level);
-	MARK; //FIXXXXX
+	if (error == 1)
+		return;
+	mark();
 	level--;
 }
 
@@ -321,9 +323,9 @@ int varDecl(lexeme *list)
 			if (symidx != -1)
 				error;
 			if (level == 0)
-				addToSymbolTable(2, ident, 0, level, numVars - 1, unmarked);
+				addToSymbolTable(2, ident, 0, level, numVars - 1, 0);
 			else
-				addToSymbolTable(2, ident, 0, level, numVars + 2, unmarked);
+				addToSymbolTable(2, ident, 0, level, numVars + 2, 0);
 			index++;
 		}
 	
@@ -372,7 +374,7 @@ void procDecl(lexeme *list, int level)
 		
 		index++;
 		emit(2, 0, 0);
-			
+	}		
 }
 
 void statement(lexeme *list)
@@ -527,7 +529,7 @@ void condition(lexeme *list)
 	{
 		index;
 		expression(list, level);
-		emit ODD;
+		emit(2, 0, 6);
 	}
 	else
 	{
@@ -570,6 +572,7 @@ void condition(lexeme *list)
 		}
 		else
 			error;
+	}
 }
 
 void expression(lexeme *list)
@@ -580,6 +583,8 @@ void expression(lexeme *list)
 		listIndex++;
 		//Call term
 		term(list, level);
+		if (error == 1)
+			return;
 		// Add NEG instruction to code array
 		emit(2, 0, 1);
 		
@@ -591,6 +596,8 @@ void expression(lexeme *list)
 			{
 				listIndex++;
 				term(list, level);
+				if (error == 1)
+					return;
 				emit(2, 0, 2);
 			}
 			// Else, go to next token, call term, and add SUB instruction to code array
@@ -598,6 +605,8 @@ void expression(lexeme *list)
 			{
 				listIndex++;
 				term(list, level);
+				if (error == 1)
+					return;
 				emit(2, 0, 3);
 			}
 		}
@@ -611,6 +620,8 @@ void expression(lexeme *list)
 		}
 		// Call term
 		term(list, level);
+		if (error == 1)
+			return;
 		
 		// While token is an add symbol or subtract symbol
 		while (list[listIndex].type == addsym || list[listIndex].type == subsym)
@@ -620,6 +631,8 @@ void expression(lexeme *list)
 			{
 				listIndex++;
 				term(list, level);
+				if (error == 1)
+					return;
 				emit(2, 0, 2);
 			}
 			// Else, go to token, call term, and add SUB instruction to code array
@@ -627,13 +640,17 @@ void expression(lexeme *list)
 			{
 				listIndex++;
 				term(list, level);
+				if (error == 1)
+					return;
 				emit(2, 0, 3);
 			}
 		}
-		// If token is (, identifier, number, or odd, print error.
-		if (list[listIndex].type == lparensym || list[listIndex].type == identsym, list[listIndex].type == numbersym || list[listIndex].type == oddsym)
+		// If token is +, -, *, /, %, (, identifier, number, or odd, print error.
+		if (list[listIndex].type == addsym || list[listIndex].type == subsym || list[listIndex].type == multsym || list[listIndex].type == divsym || list[listIndex].type == modsym || list[listIndex].type == lparensym || list[listIndex].type == identsym, list[listIndex].type == numbersym || list[listIndex].type == oddsym)
 		{
 			printparseerror(17);
+			error = 1;
+			return;
 		}
 	}
 }
@@ -647,6 +664,8 @@ void factor(lexeme *list)
 {
 	// Call factor
 	factor(list, level);
+	if (error == 1)
+		return;
 	
 	// While token is a multiplication symbol, dividing symbol, or mod symbol
 	while (list[listIndex].type == multsym || list[listIndex].type == divsym || list[listIndex].type == modsym)
@@ -656,6 +675,8 @@ void factor(lexeme *list)
 		{
 			listIndex++;
 			factor(list, level);
+			if (error == 1)
+				return;
 			emit(2, 0, 4);
 		}
 		// If token is a dividing symbol, go to next token, call factor, and add DIV to code array
@@ -663,6 +684,8 @@ void factor(lexeme *list)
 		{
 			listIndex++;
 			factor(list, level);
+			if (error == 1)
+				return;
 			emit(2, 0, 5);
 		}
 		// Else, go to next token, call factor, and add MOD to code array
@@ -670,6 +693,8 @@ void factor(lexeme *list)
 		{
 			listIndex++;
 			factor(list, level);
+			if (error == 1)
+				return;
 			emit(2, 0, 7);
 		}
 	}
