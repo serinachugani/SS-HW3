@@ -12,22 +12,26 @@ symbol *table;
 int tIndex;
 int listIndex; // Used to keep track of index in list.
 int error; // Checks if error has been encountered.
+int level; // Current level.
 
 void emit(int opname, int level, int mvalue);
 void addToSymbolTable(int k, char n[], int v, int l, int a, int m);
 void printparseerror(int err_code);
 void printsymboltable();
 void printassemblycode();
-void program(lexeme *list, int level);
-void block(lexeme *list, int level);
-void constDecl(lexeme *list, int level);
-int varDecl(lexeme *list, int level);
-void procDecl(lexeme *list, int level);
-void statement(lexeme *list, int level);
-void condition(lexeme *list, int level);
-void expression(lexeme *list, int level);
-void term(lexeme *list, int level);
-void factor(lexeme *list, int level);
+void program(lexeme *list);
+void block(lexeme *list);
+void constDecl(lexeme *list);
+int varDecl(lexeme *list);
+void procDecl(lexeme *list);
+void statement(lexeme *list);
+void condition(lexeme *list);
+void expression(lexeme *list);
+void term(lexeme *list);
+void factor(lexeme *list);
+int multipleDeclarationCheck(char n[]);
+int findSymbol(char n[], int kind);
+void mark();
 
 instruction *parse(lexeme *list, int printTable, int printCode)
 {
@@ -258,12 +262,12 @@ void printassemblycode()
 		free(table);
 }
 
-void program(lexeme *list, int level)
+void program(lexeme *list)
 {
 	
 }
 
-void block(lexeme *list, int level)
+void block(lexeme *list)
 {
 	level++;
 
@@ -295,12 +299,12 @@ void block(lexeme *list, int level)
 	level--;
 }
 
-void constDecl(lexeme *list, int level)
+void constDecl(lexeme *list)
 {
 	
 }
 
-int varDecl(lexeme *list, int level)
+int varDecl(lexeme *list)
 {
 	numVars = 0;
 	if (list[index].type == varsym)
@@ -371,7 +375,7 @@ void procDecl(lexeme *list, int level)
 			
 }
 
-void statement(lexeme *list, int level)
+void statement(lexeme *list)
 {
 	if (list[index].type == identsym)
 	{
@@ -488,7 +492,7 @@ void statement(lexeme *list, int level)
 	}			    
 }
 
-void condition(lexeme *list, int level)
+void condition(lexeme *list)
 {
 	if (list[index].type == oddsym)
 	{
@@ -539,7 +543,7 @@ void condition(lexeme *list, int level)
 			error;
 }
 
-void expression(lexeme *list, int level)
+void expression(lexeme *list)
 {
 	// If token is a subtract symbol
 	if (list[index].type == subsym)
@@ -605,12 +609,12 @@ void expression(lexeme *list, int level)
 	}
 }
 
-void term(lexeme *list, int level)
+void term(lexeme *list)
 {
 	
 }
 
-void factor(lexeme *list, int level)
+void factor(lexeme *list)
 {
 	// Call factor
 	factor(list, level);
