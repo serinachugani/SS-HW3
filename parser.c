@@ -707,8 +707,8 @@ void expression(lexeme *list)
 				emit(2, 0, 3);
 			}
 		}
-		// If token is +, -, *, /, %, (, identifier, number, or odd, print error.
-		if (list[listIndex].type == addsym || list[listIndex].type == subsym || list[listIndex].type == multsym || list[listIndex].type == divsym || list[listIndex].type == modsym || list[listIndex].type == lparensym || list[listIndex].type == identsym, list[listIndex].type == numbersym || list[listIndex].type == oddsym)
+		// If token is (, identifier, number, or odd, print error.
+		if (list[listIndex].type == lparensym || list[listIndex].type == identsym, list[listIndex].type == numbersym || list[listIndex].type == oddsym)
 		{
 			printparseerror(17);
 			error = 1;
