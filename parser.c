@@ -348,7 +348,7 @@ void constDecl(lexeme *list)
 			if (symidx != -1)
 			{
 				printpareseerror(error);
-				error = 
+				error = 2;
 				return error;
 			}
 			
@@ -358,7 +358,7 @@ void constDecl(lexeme *list)
 			if (list[listIndex].type != assignsym)
 			{
 				printpareseerror(error);
-				error = 
+				error = 2;
 				return error;
 			}
 			listIndex++;
@@ -366,7 +366,7 @@ void constDecl(lexeme *list)
 			if (list[listIndex].type != numbersym)
 			{
 				printpareseerror(error);
-				error = 
+				error = 2;
 				return error;
 			}
 			
@@ -489,16 +489,12 @@ void procDecl(lexeme *list, int level)
 
 void statement(lexeme *list)
 {
-	// if current token is identifier
 	if (list[listIndex].type == identsym)
 	{
-		// find in symbol table
 		symIdx = findSymbol(list[listIndex].name, 2);
-		
-		// if not found
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
+			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name,3))
 			{
 				printparseerror(4);
 				error = 1;
@@ -827,13 +823,13 @@ void factor(lexeme *list)
 			if (findSymbol(list[listIndex].type, 3) != -1)
 			{
 				printpareseerror(error);
-				error = 
+				error = 11;
 				return error;
 			}
 			else
 			{
 				printpareseerror(error);
-				error = 
+				error = 11;
 				return error;
 			}
 		
@@ -864,7 +860,7 @@ void factor(lexeme *list)
 		if (list[listIndex].type != rparentsym)
 		{
 			printpareseerror(error);
-			error = 
+			error = 12;
 			return error;
 		}
 		
@@ -874,7 +870,7 @@ void factor(lexeme *list)
      	else
      	{
 		printpareseerror(error);
-		error = 
+		error = 19;
 		return error;
 	}
 		
