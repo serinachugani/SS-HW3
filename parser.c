@@ -331,6 +331,7 @@ void block(lexeme *list)
 void constDecl(lexeme *list)
 {
 	if (list[listIndex].type == constsym)
+	{
 		do
 		{
 			listIndex++;
@@ -355,16 +356,15 @@ void constDecl(lexeme *list)
 			addToSymbolTable(1, saved name, number, level, 0, 0);
 			listIndex++;
 			
-		}
-		while (list[listIndex].type != commasym)
-		{
-			if (list[listIndex].type != semicolonsym)
-				if (list[listIndex].type == identsym)
-					error;
-				else
-					error;
-			listIndex++;
-		}
+		} while (list[listIndex].type != commasym)
+			
+		if (list[listIndex].type != semicolonsym)
+			if (list[listIndex].type == identsym)
+				error;
+			else
+				error;
+		listIndex++;
+	}	
 }
 
 int varDecl(lexeme *list)
