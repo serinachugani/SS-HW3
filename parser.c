@@ -395,12 +395,20 @@ int varDecl(lexeme *list)
 		if (list[index].type != semicolonsym)
 		{
 			if (list[index].type == identsym)
-				error;
+			{
+				printparseerror(error);
+				error = 1;
+				return error;
+			}
 			else
-				error;
+			{
+				printparseerror(error);
+				error = 1;
+				return error;
+			}
 		}
 	
-		index;
+		index++;
 	}
 	
 	return numVars;
@@ -413,25 +421,41 @@ void procDecl(lexeme *list, int level)
 		index++;
 		
 		if (list[index].type != identsym)
-			error;		//need to go back and fix this
+		{
+			printparseerror(error);
+			error = 1;
+			return error;
+		}
 		
 		symidx = multipleDeclarationCheck(list[index].type);	//also might need to fix this bc idk how the function works
 		
 		if (symidx != -1)
-			error;
+		{
+			printparseerror(error);
+			error = 1;
+			return error;
+		}
 		
 		addToSymbolTable(3, indent, 0, level, 0, unmarked)
 		index++;
 		
 		if (list[index].type != semicolonsym)
-			error;
+		{
+			printparseerror(error);
+			error = 1;
+			return error;
+		}
 		
-		index;
+		index++;
 		
 		block(list, level);
 		
 		if (list[index].type != semicolonsym)
-			error;
+		{
+			printparseerror(error);
+			error = 1;
+			return error;
+		}
 		
 		index++;
 		emit(2, 0, 0);
@@ -589,7 +613,7 @@ void condition(lexeme *list)
 {
 	if (list[index].type == oddsym)
 	{
-		index;
+		index++;
 		expression(list, level);
 		emit(2, 0, 6);
 	}
@@ -633,7 +657,11 @@ void condition(lexeme *list)
 			emit(2, 0, 13);
 		}
 		else
-			error;
+		{
+			printparseerror(error);
+			error = 1;
+			return error;
+		}
 	}
 }
 
