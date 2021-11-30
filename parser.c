@@ -801,7 +801,7 @@ void factor(lexeme *list)
 int findSymbol(char *name, int kind)
 {
 	int symIdx = -1;
-	for (int i = 0; i < table.length; i++)
+	for (int i = 0; i < sizeof(table); i++)
 	{
 		if (strcmp(table[i].name, name) == 0 && table[i].kind == kind && table[i].mark == 0)
 		{
@@ -814,7 +814,7 @@ int findSymbol(char *name, int kind)
 	
 void mark()
 {
-	for (int i = table.length; i >= 0; i--)
+	for (int i = sizeof(table); i >= 0; i--)
 	{
 		if (table[i].mark = 0)
 		{
