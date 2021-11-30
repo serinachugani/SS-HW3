@@ -489,12 +489,16 @@ void procDecl(lexeme *list, int level)
 
 void statement(lexeme *list)
 {
+	// if current token is identifier
 	if (list[listIndex].type == identsym)
 	{
+		// find in symbol table
 		symIdx = findSymbol(list[listIndex].name, 2);
+		
+		// if not found
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name,3))
+			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
 			{
 				printparseerror(4);
 				error = 1;
