@@ -808,14 +808,18 @@ void factor(lexeme *list)
 int findSymbol(char *name, int kind)
 {
 	int symIdx = -1;
+	int symLev = -1;
 	for (int i = 0; i < table.length; i++)
 	{
 		if (strcmp(table[i].name, name) == 0 && table[i].kind == kind && table[i].mark == 0)
 		{
-			symIdx = i;
+			if (table[i].level > symLev)
+			{
+				symIdx = i;
+				symLev = table[i].level;
+			}
 		}
 	}
-	level = maxLevel;
 	return symIdx;
 }
 	
