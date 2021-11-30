@@ -785,7 +785,7 @@ void factor(lexeme *list)
      	else if (list[listIndex].type == lparentsym)
      	{
 		listIndex++;
-		Expression;
+		expression(list, level);
 		
 		if (list[listIndex].type != rparentsym)
 			error;
