@@ -572,6 +572,19 @@ void statement(lexeme *list)
 		condition(list, level);
 		jpcIdx = listIndex;
 		emit(8,0,0);
+		
+		// if next token not then, send if must be followed by then error
+		if (list[listIndex].type != thensym)
+		{
+			printparseerror(8);
+			error = 1;
+			return;
+		}
+				
+		// next token
+		listIndex++;
+		statement(list,level);
+		
 		if (list[listIndex].type == elsesym)
 		{
 			jmpIdx = listIndex;
