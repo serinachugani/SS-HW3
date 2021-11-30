@@ -607,7 +607,7 @@ void statement(lexeme *list)
 			}
 		}
 		listIndex++;
-		emit(5, level - table[symIdx].level, table[symIdx].addr;
+		emit(5, level - table[symIdx].level, table[symIdx].addr);
 	}			    
 }
 
