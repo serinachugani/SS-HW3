@@ -29,7 +29,7 @@ void condition(lexeme *list);
 void expression(lexeme *list);
 void term(lexeme *list);
 void factor(lexeme *list);
-int multipleDeclarationCheck(char n[]);
+int multipleDeclarationCheck(char *n);
 int findSymbol(char* n, int kind);
 void mark();
 
