@@ -752,7 +752,50 @@ void term(lexeme *list)
 
 void factor(lexeme *list)
 {
-
+	if (list[listIndex].type == identsym)
+	{
+		symIdx_var = findSymbol(list[listIndex].type, 2);
+		symIdx_const = findSymbol(list[listIndex].type, 1);
+		
+		if (symIdx_var == -1 && symIdx_const == -1)
+			if (findSymbol(list[listIndex].type, 3) != -1)
+				error;
+			else
+				error;
+		
+		if (symIdx_var == -1)
+			emit LIT M = table[symIdx_const].val
+			
+		else if (symIdx_const == -1 || table[symIdx_var].level > table[symIdx_const].level)
+			emit LOD(L = level–table[symIdx_var].level, M = table[symIdx_var].addr)
+			
+		else 
+			emit LIT M = table[symIdx_const].val
+			
+		listIndex++;
+	}
+	
+	else if (list[listIndex].type == numbersym)
+	{
+		// emit LIT
+		emit(6, 0, M);
+		listIndex++;
+	}
+		
+     	else if (list[listIndex].type == lparentsym)
+     	{
+		listIndex++;
+		Expression;
+		
+		if (list[listIndex].type != rparentsym)
+			error;
+		
+		listIndex++;	
+	}
+     	
+     	else
+     		error;
+		
 }
 
 int findSymbol(char *name, int kind)
