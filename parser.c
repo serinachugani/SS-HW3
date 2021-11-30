@@ -501,8 +501,8 @@ void statement(lexeme *list)
 			jmpIdx = listIndex;
 			emit(7,0,0);
 			code[jpcIdx].m = listIndex * 3;
-			statement(list, level);
 			listIndex++;
+			statement(list, level);
 			code[jmpIdx].m = listIndex * 3;
 		}
 		else 
