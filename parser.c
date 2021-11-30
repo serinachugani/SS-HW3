@@ -764,13 +764,13 @@ void factor(lexeme *list)
 				error;
 		
 		if (symIdx_var == -1)
-			emit(6, 0, table[symIdx_const].val);
+			emit(1, 0, table[symIdx_const].val);
 			
 		else if (symIdx_const == -1 || table[symIdx_var].level > table[symIdx_const].level)
-			emit(level–table[symIdx_var].level, 0, table[symIdx_var].addr);
+			emit(level–table[symIdx_var].level, table[symIdx_var].addr);
 			
 		else 
-			emit(6, 0 , table[symIdx_const].val);
+			emit(1, 0 , table[symIdx_const].val);
 			
 		listIndex++;
 	}
@@ -778,7 +778,7 @@ void factor(lexeme *list)
 	else if (list[listIndex].type == numbersym)
 	{
 		// emit LIT
-		emit(6, 0, 0);
+		emit(1, 0, 0);
 		listIndex++;
 	}
 		
@@ -801,7 +801,7 @@ void factor(lexeme *list)
 int findSymbol(char *name, int kind)
 {
 	int symIdx = -1;
-	for (int i = 0; i < sizeof(table); i++)
+	for (int i = 0; i < table.length; i++)
 	{
 		if (strcmp(table[i].name, name) == 0 && table[i].kind == kind && table[i].mark == 0)
 		{
@@ -814,7 +814,7 @@ int findSymbol(char *name, int kind)
 	
 void mark()
 {
-	for (int i = sizeof(table); i >= 0; i--)
+	for (int i = table.length; i >= 0; i--)
 	{
 		if (table[i].mark = 0)
 		{
