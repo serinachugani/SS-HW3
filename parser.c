@@ -829,6 +829,11 @@ void mark()
 		}
 	}
 }
+
+int multipleDeclarationCheck(char n[])
+{
+	
+}
 				    
 
 
