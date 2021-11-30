@@ -457,7 +457,7 @@ void statement(lexeme *list)
 		}
 		listIndex++;
 		expression(list, level);
-		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr);
+		emit(4, level - table[symIdx].level, table[symIdx].addr);
 		return;
 	}
 	if (list[listIndex].type == beginsym)
@@ -488,11 +488,11 @@ void statement(lexeme *list)
 		listIndex++;
 		condition(list, level);
 		jpcIdx = listIndex;
-		emit JPC;
+		emit(8,0,0);
 		if (list[listIndex].type == elsesym)
 		{
 			jmpIdx = listIndex;
-			emit JMP;
+			emit(7,0,0);
 			code[jpcIdx].m = listIndex * 3;
 			statement(list, level);
 			listIndex++;
@@ -516,9 +516,9 @@ void statement(lexeme *list)
 		}
 		listIndex++;
 		jpcIdx = listIndex;
-		emit JPC;
+		emit(8,0,0);
 		statement(list, level);
-		emit JMP M = loopIdx * 3;
+		emit(7,0,loopIdx * 3);
 		code[jpcIdx].m = listIndex * 3;
 		return;
 	}
@@ -545,15 +545,15 @@ void statement(lexeme *list)
 			}
 		}
 		listIndex++;
-		emit READ;
-		emit STO (L = level - table[symIdx].level, M = table[symIdx].addr);
+		emit(9,0,2);
+		emit(4, level - table[symIdx].level, table[symIdx].addr);
 		return;
 	}
 	if (list[listIndex].type == writesym)
 	{
 		listIndex++;
 		expression(list, level);
-		emit WRITE;
+		emit(9,0,1);
 		return;
 	}
 	if (list[listIndex].type == callsym)
@@ -574,7 +574,7 @@ void statement(lexeme *list)
 			}
 		}
 		listIndex++;
-		emit CAL(L = level - table[symIdx].level, symIdx);
+		emit(5, level - table[symIdx].level, symIdx);
 	}			    
 }
 
