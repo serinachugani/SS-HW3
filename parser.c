@@ -764,13 +764,13 @@ void factor(lexeme *list)
 				error;
 		
 		if (symIdx_var == -1)
-			emit LIT M = table[symIdx_const].val
+			emit(6, 0, table[symIdx_const].val);
 			
 		else if (symIdx_const == -1 || table[symIdx_var].level > table[symIdx_const].level)
-			emit LOD(L = level–table[symIdx_var].level, M = table[symIdx_var].addr)
+			emit(level–table[symIdx_var].level, 0, table[symIdx_var].addr);
 			
 		else 
-			emit LIT M = table[symIdx_const].val
+			emit(6, 0 , table[symIdx_const].val);
 			
 		listIndex++;
 	}
@@ -778,7 +778,7 @@ void factor(lexeme *list)
 	else if (list[listIndex].type == numbersym)
 	{
 		// emit LIT
-		emit(6, 0, M);
+		emit(6, 0, 0);
 		listIndex++;
 	}
 		
