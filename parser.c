@@ -337,21 +337,38 @@ void constDecl(lexeme *list)
 			listIndex++;
 			
 			if (list[listIndex].type != identsym)
-				error;
+			{
+				printparseerror(error);
+				error = 2;
+				return error;
+			}
 			
 			symidx = multipleDeclarationCheck(list[listIndex].type);
 			
 			if (symidx != -1)
-				error;
+			{
+				printpareseerror(error);
+				error = 
+				return error;
+			}
+			
 			// save indent name
 			listIndex++;
 			
 			if (list[listIndex].type != assignsym)
-				error;
+			{
+				printpareseerror(error);
+				error = 
+				return error;
+			}
 			listIndex++;
 			
 			if (list[listIndex].type != numbersym)
-				error;
+			{
+				printpareseerror(error);
+				error = 
+				return error;
+			}
 			
 			addToSymbolTable(1, saved name, number, level, 0, 0);
 			listIndex++;
@@ -360,9 +377,17 @@ void constDecl(lexeme *list)
 			
 		if (list[listIndex].type != semicolonsym)
 			if (list[listIndex].type == identsym)
-				error;
+			{
+				printpareseerror(error);
+				error = 13;
+				return error;
+			}
 			else
-				error;
+			{
+				printpareseerror(error);
+				error = 14;
+				return error;
+			}
 		listIndex++;
 	}	
 }
@@ -796,15 +821,23 @@ void factor(lexeme *list)
 		
 		if (symIdx_var == -1 && symIdx_const == -1)
 			if (findSymbol(list[listIndex].type, 3) != -1)
-				error;
+			{
+				printpareseerror(error);
+				error = 
+				return error;
+			}
 			else
-				error;
+			{
+				printpareseerror(error);
+				error = 
+				return error;
+			}
 		
 		if (symIdx_var == -1)
 			emit(1, 0, table[symIdx_const].val);
 			
 		else if (symIdx_const == -1 || table[symIdx_var].level > table[symIdx_const].level)
-			emit(level–table[symIdx_var].level, table[symIdx_var].addr);
+			emit(3, level–table[symIdx_var].level, table[symIdx_var].addr);
 			
 		else 
 			emit(1, 0 , table[symIdx_const].val);
@@ -825,13 +858,21 @@ void factor(lexeme *list)
 		expression(list, level);
 		
 		if (list[listIndex].type != rparentsym)
-			error;
+		{
+			printpareseerror(error);
+			error = 
+			return error;
+		}
 		
 		listIndex++;	
 	}
      	
      	else
-     		error;
+     	{
+		printpareseerror(error);
+		error = 
+		return error;
+	}
 		
 }
 
