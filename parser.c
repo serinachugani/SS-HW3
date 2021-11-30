@@ -471,11 +471,13 @@ void statement(lexeme *list)
 		{
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name,3))
 			{
+				printparseerror(4);
 				error = 1;
 				return;
 			}
 			else
 			{
+				printparseerror(6);
 				error = 1;
 				return;
 			}
