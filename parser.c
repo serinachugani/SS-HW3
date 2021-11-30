@@ -835,13 +835,13 @@ void factor(lexeme *list)
 		
 }
 
-int findSymbol(char *name, int kind)
+int findSymbol(char *n, int kind)
 {
 	int symIdx = -1;
 	int symLev = -1;
 	for (int i = 0; i < table.length; i++)
 	{
-		if (strcmp(table[i].name, name) == 0 && table[i].kind == kind && table[i].mark == 0)
+		if (strcmp(table[i].name, n) == 0 && table[i].kind == kind && table[i].mark == 0)
 		{
 			if (table[i].level > symLev)
 			{
