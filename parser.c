@@ -323,7 +323,7 @@ void block(lexeme *list)
 
 void constDecl(lexeme *list)
 {
-	if (list[listIndex].type == const)
+	if (list[listIndex].type == constsym)
 		do
 		{
 			listIndex++;
