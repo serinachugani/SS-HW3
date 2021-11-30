@@ -489,12 +489,16 @@ void procDecl(lexeme *list, int level)
 
 void statement(lexeme *list)
 {
+	// if current token is identifier
 	if (list[listIndex].type == identsym)
 	{
+		// find in symbol table
 		symIdx = findSymbol(list[listIndex].name, 2);
+		
+		// if not found
 		if (symIdx == -1)
 		{
-			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name,3))
+			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
 			{
 				printparseerror(4);
 				error = 1;
@@ -507,17 +511,26 @@ void statement(lexeme *list)
 				return;
 			}
 		}
+		
+		// go to next token
 		listIndex++;
+		
+		// if next token after identifier is not assignment, send assignment error
 		if (list[listIndex].type != assignsym)
 		{
+			printparseerror(5);
 			error = 1;
 			return;
 		}
+		
+		// go to next token
 		listIndex++;
 		expression(list, level);
 		emit(4, level - table[symIdx].level, table[symIdx].addr);
 		return;
 	}
+	
+	// if current token is begin
 	if (list[listIndex].type == beginsym)
 	{
 		do {
@@ -545,11 +558,16 @@ void statement(lexeme *list)
 				return;
 			}
 		}
+		
+		// next token
 		listIndex++;
 		return;
 	}
+	
+	// if current token is if
 	if (list[listIndex].type == ifsym)
 	{
+		// next token
 		listIndex++;
 		condition(list, level);
 		jpcIdx = listIndex;
@@ -569,8 +587,11 @@ void statement(lexeme *list)
 		}
 		return;
 	}
+	
+	// if current token is while
 	if (list[listIndex].type == whilesym)
 	{
+		// next token
 		listIndex++;
 		loopIdx = listIndex;
 		condition(list, level);
@@ -580,6 +601,8 @@ void statement(lexeme *list)
 			error = 1;
 			return;
 		}
+		
+		// next token
 		listIndex++;
 		jpcIdx = listIndex;
 		emit(8,0,0);
@@ -588,8 +611,11 @@ void statement(lexeme *list)
 		code[jpcIdx].m = listIndex * 3;
 		return;
 	}
+	
+	// if current token is read
 	if (list[listIndex].type == readsym)
 	{
+		// next token
 		listIndex++;
 		if (list[listIndex].type != identsym)
 		{
@@ -615,15 +641,21 @@ void statement(lexeme *list)
 		emit(4, level - table[symIdx].level, table[symIdx].addr);
 		return;
 	}
+	
+	// if current token is write
 	if (list[listIndex].type == writesym)
 	{
+		// next token
 		listIndex++;
 		expression(list, level);
 		emit(9,0,1);
 		return;
 	}
+	
+	// if current token is call
 	if (list[listIndex].type == callsym)
 	{
+		// next token
 		listIndex++;
 		symIdx = findSymbol(list[listIndex].name, 3);
 		if (symIdx == -1)
@@ -639,6 +671,8 @@ void statement(lexeme *list)
 				return;
 			}
 		}
+		
+		// next token
 		listIndex++;
 		emit(5, level - table[symIdx].level, table[symIdx].addr);
 	}			    
