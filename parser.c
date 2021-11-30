@@ -524,16 +524,23 @@ void statement(lexeme *list)
 			listIndex++;
 			statement(list, level);
 		} while (list[listIndex].type == semicolonsym)
+			
+		// begin is not followed by end
 		if (list[listIndex].type != endsym)
 		{
+			// if identifier, begin, if, while, read, write, or call found instead, send semicolon error
 			if (list[listIndex].type == identsym || list[listIndex].type == beginsym || list[listIndex].type == ifsym || list[listIndex].type == whilesym 
 			    || list[listIndex].type == readsym || list[listIndex].type == writesym || list[listIndex].type == callsym)
 			{
+				printparseerror(15);
 				error = 1;
 				return;
 			}
+			
+			// else, send begin must be followed by end error
 			else
 			{
+				printparseerror(16);
 				error = 1;
 				return;
 			}
@@ -569,6 +576,7 @@ void statement(lexeme *list)
 		condition(list, level);
 		if (list[listIndex].type != dosym)
 		{
+			printparseerror(9);
 			error = 1;
 			return;
 		}
