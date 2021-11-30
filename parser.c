@@ -35,17 +35,24 @@ void mark();
 
 instruction *parse(lexeme *list, int printTable, int printCode)
 {
-	code = NULL;
-	/*this line is EXTREMELY IMPORTANT, you MUST uncomment it
-		when you test your code otherwise IT WILL SEGFAULT in 
-		vm.o THIS LINE IS HOW THE VM KNOWS WHERE THE CODE ENDS
-		WHEN COPYING IT TO THE PAS*/
+	code = malloc(MAX_CODE_LENGTH * sizeof *code);
+  	table = malloc(MAX_SYMBOL_COUNT * sizeof *table);
 	cIndex = 0;
 	tIndex = 0;
 	listIndex = 0;
+	error = 0;
+ 
+	program(list);
+  
+  	code[cIndex].opcode = -1;
+
+	if (error == 1) 
+		return NULL;
+	if (printTable == 1)
+		printsymboltable();
 	
-	
-	code[cIndex].opcode = -1;
+	if (printCode == 1)
+		printassemblycode();
 	
 	return code;
 }
