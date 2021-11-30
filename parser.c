@@ -349,15 +349,15 @@ void constDecl(lexeme *list)
 			listIndex++;
 			
 		}
-	while (list[listIndex].type != commasym)
-	{
-		if (list[listIndex].type != semicolonsym)
-			if (list[listIndex].type == identsym)
-				error;
-			else
-				error;
-		listIndex++;
-	}
+		while (list[listIndex].type != commasym)
+		{
+			if (list[listIndex].type != semicolonsym)
+				if (list[listIndex].type == identsym)
+					error;
+				else
+					error;
+			listIndex++;
+		}
 }
 
 int varDecl(lexeme *list)
