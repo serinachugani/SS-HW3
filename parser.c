@@ -338,18 +338,18 @@ void constDecl(lexeme *list)
 			
 			if (list[listIndex].type != identsym)
 			{
-				printparseerror(error);
-				error = 2;
-				return error;
+				printparseerror(2);
+				error = 1;
+				return;
 			}
 			
 			symidx = multipleDeclarationCheck(list[listIndex].type);
 			
 			if (symidx != -1)
 			{
-				printpareseerror(error);
-				error = 2;
-				return error;
+				printpareseerror(2);
+				error = 1;
+				return;
 			}
 			
 			// save indent name
@@ -357,17 +357,17 @@ void constDecl(lexeme *list)
 			
 			if (list[listIndex].type != assignsym)
 			{
-				printpareseerror(error);
-				error = 2;
-				return error;
+				printpareseerror(2);
+				error = 1;
+				return;
 			}
 			listIndex++;
 			
 			if (list[listIndex].type != numbersym)
 			{
-				printpareseerror(error);
-				error = 2;
-				return error;
+				printpareseerror(2);
+				error = 1;
+				return;
 			}
 			
 			addToSymbolTable(1, saved name, number, level, 0, 0);
@@ -378,15 +378,15 @@ void constDecl(lexeme *list)
 		if (list[listIndex].type != semicolonsym)
 			if (list[listIndex].type == identsym)
 			{
-				printpareseerror(error);
-				error = 13;
-				return error;
+				printpareseerror(13);
+				error = 1;
+				return;
 			}
 			else
 			{
-				printpareseerror(error);
-				error = 14;
-				return error;
+				printpareseerror(14);
+				error = 1;
+				return;
 			}
 		listIndex++;
 	}	
@@ -906,15 +906,15 @@ void factor(lexeme *list)
 		if (symIdx_var == -1 && symIdx_const == -1)
 			if (findSymbol(list[listIndex].type, 3) != -1)
 			{
-				printpareseerror(error);
-				error = 11;
-				return error;
+				printpareseerror(11);
+				error = 1;
+				return;
 			}
 			else
 			{
-				printpareseerror(error);
-				error = 11;
-				return error;
+				printpareseerror(11);
+				error = 1;
+				return;
 			}
 		
 		if (symIdx_var == -1)
@@ -943,9 +943,9 @@ void factor(lexeme *list)
 		
 		if (list[listIndex].type != rparentsym)
 		{
-			printpareseerror(error);
-			error = 12;
-			return error;
+			printpareseerror(12);
+			error = 1;
+			return;
 		}
 		
 		listIndex++;	
@@ -953,9 +953,9 @@ void factor(lexeme *list)
      	
      	else
      	{
-		printpareseerror(error);
-		error = 19;
-		return error;
+		printpareseerror(19);
+		error = 1;
+		return;
 	}
 		
 }
