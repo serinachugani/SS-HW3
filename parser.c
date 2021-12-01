@@ -1,3 +1,14 @@
+/*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+*	
+*	HW3: Parser - Code Generator
+*	Group Members:
+*		Serina Chugani
+*		Katherine Abreu
+*		Jasmine Moy
+*		Ainsley Dalton
+*
+*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -538,12 +549,15 @@ void statement(lexeme *list)
 		// if not found
 		if (symIdx == -1)
 		{
+			// identifier not variable, send "only variable may be assigned to or read" error
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
 			{
 				printparseerror(6);
 				error = 1;
 				return;
 			}
+			
+			// identifier not found in symbol table unmarker, send "undeclared identifier" error
 			else
 			{
 				printparseerror(19);
@@ -555,7 +569,7 @@ void statement(lexeme *list)
 		// go to next token
 		listIndex++;
 		
-		// if next token after identifier is not assignment, send assignment error
+		// if next token after identifier is not assignment, send variable assignment error
 		if (list[listIndex].type != assignsym)
 		{
 			printparseerror(5);
@@ -595,7 +609,7 @@ void statement(lexeme *list)
 				return;
 			}
 			
-			// else, send begin must be followed by end error
+			// else, send "begin must be followed by end" error
 			else
 			{
 				printparseerror(16);
@@ -617,10 +631,11 @@ void statement(lexeme *list)
 		condition(list);
 		if (error == 1)
 			return;
+		
 		jpcIdx = cIndex;
 		emit(8,0,0);
 		
-		// if current token not then, send if must be followed by then error
+		// if current token not then, send "if must be followed by then" error
 		if (list[listIndex].type != thensym)
 		{
 			printparseerror(8);
@@ -633,6 +648,7 @@ void statement(lexeme *list)
 		statement(list);
 		if (error == 1)
 			return;
+		
 		// current token is else
 		if (list[listIndex].type == elsesym)
 		{
@@ -666,7 +682,7 @@ void statement(lexeme *list)
 		if (error == 1)
 			return;
 		
-		// if current token is not do, send while must be followed by do error
+		// if current token is not do, send "while must be followed by do" error
 		if (list[listIndex].type != dosym)
 		{
 			printparseerror(9);
@@ -706,12 +722,15 @@ void statement(lexeme *list)
 		// if not found
 		if (symIdx == -1)
 		{
+			// identifier not variable, send "only variable may be assigned to or read" error
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
 			{
 				printparseerror(6);
 				error = 1;
 				return;
 			}
+			
+			// identifier not found in symbol table unmarker, send "undeclared identifier" error
 			else
 			{
 				printparseerror(19);
@@ -751,12 +770,15 @@ void statement(lexeme *list)
 		// if not found
 		if (symIdx == -1)
 		{
+			// identifier not variable, send "only variable may be assigned to or read" error
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 2))
 			{
 				printparseerror(7);
 				error = 1;
 				return;
 			}
+			
+			// identifier not found in symbol table unmarker, send "undeclared identifier" error
 			else
 			{
 				printparseerror(19);
