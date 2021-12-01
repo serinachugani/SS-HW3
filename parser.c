@@ -534,6 +534,7 @@ void statement(lexeme *list)
 	if (list[listIndex].type == beginsym)
 	{
 		do {
+			// next token
 			listIndex++;
 			statement(list, level);
 		} while (list[listIndex].type == semicolonsym)
@@ -573,7 +574,7 @@ void statement(lexeme *list)
 		jpcIdx = listIndex;
 		emit(8,0,0);
 		
-		// if next token not then, send if must be followed by then error
+		// if current token not then, send if must be followed by then error
 		if (list[listIndex].type != thensym)
 		{
 			printparseerror(8);
@@ -585,15 +586,20 @@ void statement(lexeme *list)
 		listIndex++;
 		statement(list,level);
 		
+		// current token is else
 		if (list[listIndex].type == elsesym)
 		{
 			jmpIdx = listIndex;
 			emit(7,0,0);
 			code[jpcIdx].m = listIndex * 3;
+			
+			// next token
 			listIndex++;
 			statement(list, level);
 			code[jmpIdx].m = listIndex * 3;
 		}
+		
+		// no else statement
 		else 
 		{
 			code[jpcIdx].m = listIndex * 3;
@@ -608,6 +614,8 @@ void statement(lexeme *list)
 		listIndex++;
 		loopIdx = listIndex;
 		condition(list, level);
+		
+		// if current token is not do, send while must be followed by do error
 		if (list[listIndex].type != dosym)
 		{
 			printparseerror(9);
@@ -630,12 +638,19 @@ void statement(lexeme *list)
 	{
 		// next token
 		listIndex++;
+		
+		// if current token is not identifier, send only variables may be assigned to or read error
 		if (list[listIndex].type != identsym)
 		{
+			printparseerror(6);
 			error = 1;
 			return;
 		}
+		
+		// find symbol
 		symIdx = findSymbol(list[listIndex].name, 2);
+		
+		// if not found
 		if (symIdx == -1)
 		{
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
@@ -649,6 +664,8 @@ void statement(lexeme *list)
 				return;
 			}
 		}
+		
+		// next token
 		listIndex++;
 		emit(9,0,2);
 		emit(4, level - table[symIdx].level, table[symIdx].addr);
@@ -670,7 +687,11 @@ void statement(lexeme *list)
 	{
 		// next token
 		listIndex++;
+		
+		// find symbol
 		symIdx = findSymbol(list[listIndex].name, 3);
+		
+		// if not found
 		if (symIdx == -1)
 		{
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 2))
