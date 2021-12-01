@@ -504,13 +504,13 @@ void statement(lexeme *list)
 		{
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
 			{
-				printparseerror(4);
+				printparseerror(6);
 				error = 1;
 				return;
 			}
 			else
 			{
-				printparseerror(6);
+				printparseerror(19);
 				error = 1;
 				return;
 			}
@@ -659,11 +659,13 @@ void statement(lexeme *list)
 		{
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 3))
 			{
+				printparseerror(6);
 				error = 1;
 				return;
 			}
 			else
 			{
+				printparseerror(19);
 				error = 1;
 				return;
 			}
@@ -700,11 +702,13 @@ void statement(lexeme *list)
 		{
 			if (findSymbol(list[listIndex].name, 1) != findSymbol(list[listIndex].name, 2))
 			{
+				printparseerror(6);
 				error = 1;
 				return;
 			}
 			else
 			{
+				printparseerror(19);
 				error = 1;
 				return;
 			}
