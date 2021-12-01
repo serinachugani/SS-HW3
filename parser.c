@@ -960,10 +960,14 @@ int findSymbol(char *n, int kind)
 {
 	int symIdx = -1;
 	int symLev = -1;
-	for (int i = 0; i < table.length; i++)
+	
+	// linear search through symbol table
+	for (int i = 0; i < sizeof(table); i++)
 	{
+		// if instance has same name, kind, and is unmarked, keep track of that instance
 		if (strcmp(table[i].name, n) == 0 && table[i].kind == kind && table[i].mark == 0)
 		{
+			// maximize level value of a matching instance
 			if (table[i].level > symLev)
 			{
 				symIdx = i;
@@ -971,30 +975,51 @@ int findSymbol(char *n, int kind)
 			}
 		}
 	}
+	
+	// return index of symbol
 	return symIdx;
 }
 	
 void mark()
 {
-	for (int i = table.length; i >= 0; i--)
+	// linear pass starting at end of table
+	for (int i = sizeof(table); i >= 0; i--)
 	{
+		// if element is unmarked
 		if (table[i].mark = 0)
-		{
-			if (table[i].level < level)
-			{
-				return;
-			}
+		{	
+			// marks elements with same level as current level
 			if (table[i].level == level)
 			{
 				table[i].mark = 1;
+			}
+			
+			// if element has level less than current level, stop
+			if (table[i].level < level)
+			{
+				return;
 			}
 		}
 	}
 }
 
-int multipleDeclarationCheck(char n[])
+int multipleDeclarationCheck(char *n)
 {
+	// linear search through symbol table for name given
+	for (int i = 0; i < sizeof(table); i++)
+	{
+		// if instance has same name, is unmarked, and level is equal to current level, return index of instance
+		if (strcmp(table[i].name, n) == 0 && table[i].mark == 0)
+		{
+			if (table[i].level == level)
+			{
+				return i;
+			}
+		}
+	}
 	
+	// return -1 if nothing is found
+	return -1;
 }
 				    
 
