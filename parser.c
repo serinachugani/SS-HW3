@@ -374,7 +374,7 @@ void constDecl(lexeme *list)
 			
 			if (symidx != -1)
 			{
-				printpareseerror(18);
+				printparseerror(18);
 				error = 1;
 				return;
 			}
@@ -385,7 +385,7 @@ void constDecl(lexeme *list)
 			
 			if (list[listIndex].type != assignsym)
 			{
-				printpareseerror(2);
+				printparseerror(2);
 				error = 1;
 				return;
 			}
@@ -393,7 +393,7 @@ void constDecl(lexeme *list)
 			
 			if (list[listIndex].type != numbersym)
 			{
-				printpareseerror(2);
+				printparseerror(2);
 				error = 1;
 				return;
 			}
@@ -401,21 +401,23 @@ void constDecl(lexeme *list)
 			addToSymbolTable(1, ident, list[listIndex].value, level, 0, 0);
 			listIndex++;
 			
-		} while (list[listIndex].type != commasym);
+		} while (list[listIndex].type == commasym);
 			
 		if (list[listIndex].type != semicolonsym)
+    		{
 			if (list[listIndex].type == identsym)
 			{
-				printpareseerror(13);
+				printparseerror(13);
 				error = 1;
 				return;
 			}
 			else
 			{
-				printpareseerror(14);
+				printparseerror(14);
 				error = 1;
 				return;
 			}
+    		}
 		listIndex++;
 	}	
 }
@@ -563,7 +565,7 @@ void statement(lexeme *list)
 		
 		// go to next token
 		listIndex++;
-		expression(list, level);
+		expression(list);
 		if (error == 1)
 			return;
 		emit(4, level - table[symIdx].level, table[symIdx].addr);
@@ -615,7 +617,7 @@ void statement(lexeme *list)
 		condition(list);
 		if (error == 1)
 			return;
-		jpcIdx = listIndex;
+		jpcIdx = cIndex;
 		emit(8,0,0);
 		
 		// if current token not then, send if must be followed by then error
@@ -628,7 +630,7 @@ void statement(lexeme *list)
 				
 		// next token
 		listIndex++;
-		statement(list,level);
+		statement(list);
 		if (error == 1)
 			return;
 		// current token is else
@@ -765,7 +767,7 @@ void statement(lexeme *list)
 		
 		// next token
 		listIndex++;
-		emit(5, level - table[symIdx].level, table[symIdx].addr);
+		emit(5, level - table[symIdx].level, symIdx);
 	}			    
 }
 
@@ -912,7 +914,7 @@ void expression(lexeme *list)
 			}
 		}
 		// If token is (, identifier, number, or odd, print error.
-		if (list[listIndex].type == lparensym || list[listIndex].type == identsym, list[listIndex].type == numbersym || list[listIndex].type == oddsym)
+		if (list[listIndex].type == lparensym || list[listIndex].type == identsym || list[listIndex].type == numbersym || list[listIndex].type == oddsym)
 		{
 			printparseerror(17);
 			error = 1;
@@ -970,40 +972,37 @@ void factor(lexeme *list)
 		symIdx_const = findSymbol(list[listIndex].name, 1);
 		
 		if (symIdx_var == -1 && symIdx_const == -1)
+    		{
 			if (findSymbol(list[listIndex].name, 3) != -1)
 			{
-				printpareseerror(11);
+				printparseerror(11);
 				error = 1;
 				return;
 			}
 			else
 			{
-				printpareseerror(19);
+				printparseerror(19);
 				error = 1;
 				return;
 			}
-		
+    		}
 		if (symIdx_var == -1)
 			emit(1, 0, table[symIdx_const].val);
-			
 		else if (symIdx_const == -1 || table[symIdx_var].level > table[symIdx_const].level)
-			emit(3, level–table[symIdx_var].level, table[symIdx_var].addr);
-			
+			emit(3, level - table[symIdx_var].level, table[symIdx_var].addr);
 		else 
 			emit(1, 0 , table[symIdx_const].val);
 			
 		listIndex++;
 	}
-	
 	else if (list[listIndex].type == numbersym)
 	{
 		// emit LIT
 		emit(1, 0, list[listIndex].value);
 		listIndex++;
 	}
-		
-     	else if (list[listIndex].type == lparensym)
-     	{
+ 	else if (list[listIndex].type == lparensym)
+ 	{
 		listIndex++;
 		expression(list);
 		if (error == 1)
@@ -1011,17 +1010,16 @@ void factor(lexeme *list)
 		
 		if (list[listIndex].type != rparensym)
 		{
-			printpareseerror(12);
+			printparseerror(12);
 			error = 1;
 			return;
 		}
 		
 		listIndex++;	
-	}
-     	
-     	else
-     	{
-		printpareseerror(11);
+	}	
+	else
+	{
+		printparseerror(11);
 		error = 1;
 		return;
 	}
@@ -1058,7 +1056,7 @@ void mark()
 	for (int i = tIndex - 1; i >= 0; i--)
 	{
 		// if element is unmarked
-		if (table[i].mark = 0)
+		if (table[i].mark == 0)
 		{	
 			// marks elements with same level as current level
 			if (table[i].level == level)
@@ -1093,6 +1091,3 @@ int multipleDeclarationCheck(char *n)
 	// return -1 if nothing is found
 	return -1;
 }
-				    
-
-
