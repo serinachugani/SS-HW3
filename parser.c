@@ -395,16 +395,20 @@ void constDecl(lexeme *list)
 int varDecl(lexeme *list)
 {
 	numVars = 0;
-	if (list[index].type == varsym)
+	if (list[listIndex].type == varsym)
 		do
 		{
 			numVars++;
-			index++;
+			listIndex++;
 			
-			if (list[index].type != identsym)
-				error;
+			if (list[listIndex].type != identsym)
+			{
+				printparseerror(3);
+				error = 1;
+				return;
+			}
 			
-			symidx = multipleDeclarationCheck(list[index].type);
+			symidx = multipleDeclarationCheck(list[listIndex].type);
 			
 			if (symidx != -1)
 				error;
@@ -412,28 +416,28 @@ int varDecl(lexeme *list)
 				addToSymbolTable(2, ident, 0, level, numVars - 1, 0);
 			else
 				addToSymbolTable(2, ident, 0, level, numVars + 2, 0);
-			index++;
+			listIndex++;
 		}
 	
-	while (list[index].type == commasym)
+	while (list[listIndex].type == commasym)
 	{
-		if (list[index].type != semicolonsym)
+		if (list[listIndex].type != semicolonsym)
 		{
-			if (list[index].type == identsym)
+			if (list[listIndex].type == identsym)
 			{
-				printparseerror(error);
+				printparseerror(13);
 				error = 1;
-				return error;
+				return;
 			}
 			else
 			{
-				printparseerror(error);
+				printparseerror(14);
 				error = 1;
-				return error;
+				return;
 			}
 		}
 	
-		index++;
+		listIndex++;
 	}
 	
 	return numVars;
@@ -441,48 +445,48 @@ int varDecl(lexeme *list)
 
 void procDecl(lexeme *list, int level)
 {
-	while (list[index].type == procsym)	//so im not sure how much of this is supposed to be in the while loop based on the pseudocode so i just put all of it
+	while (list[listIndex].type == procsym)	//so im not sure how much of this is supposed to be in the while loop based on the pseudocode so i just put all of it
 	{
-		index++;
+		listIndex++;
 		
-		if (list[index].type != identsym)
+		if (list[listIndex].type != identsym)
 		{
-			printparseerror(error);
+			printparseerror(4);
 			error = 1;
-			return error;
+			return;
 		}
 		
-		symidx = multipleDeclarationCheck(list[index].type);	//also might need to fix this bc idk how the function works
+		symidx = multipleDeclarationCheck(list[listIndex].type);	//also might need to fix this bc idk how the function works
 		
 		if (symidx != -1)
 		{
 			printparseerror(error);
 			error = 1;
-			return error;
+			return;
 		}
 		
 		addToSymbolTable(3, indent, 0, level, 0, unmarked)
-		index++;
+		listIndex++;
 		
-		if (list[index].type != semicolonsym)
+		if (list[listIndex].type != semicolonsym)
 		{
-			printparseerror(error);
+			printparseerror(14);
 			error = 1;
-			return error;
+			return;
 		}
 		
-		index++;
+		listIndex++;
 		
 		block(list, level);
 		
-		if (list[index].type != semicolonsym)
+		if (list[listIndex].type != semicolonsym)
 		{
-			printparseerror(error);
+			printparseerror(14);
 			error = 1;
-			return error;
+			return;
 		}
 		
-		index++;
+		listIndex++;
 		emit(2, 0, 0);
 	}		
 }
