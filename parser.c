@@ -582,6 +582,8 @@ void statement(lexeme *list)
 		expression(list);
 		if (error == 1)
 			return;
+		
+		// add STO instruction
 		emit(4, level - table[symIdx].level, table[symIdx].addr);
 		return;
 	}
@@ -631,8 +633,9 @@ void statement(lexeme *list)
 		condition(list);
 		if (error == 1)
 			return;
-		
 		jpcIdx = cIndex;
+		
+		// add JPC instruction
 		emit(8,0,0);
 		
 		// if current token not then, send "if must be followed by then" error
@@ -653,6 +656,8 @@ void statement(lexeme *list)
 		if (list[listIndex].type == elsesym)
 		{
 			jmpIdx = cIndex;
+			
+			// add JMP instruction
 			emit(7,0,0);
 			code[jpcIdx].m = cIndex * 3;
 			
@@ -693,10 +698,14 @@ void statement(lexeme *list)
 		// next token
 		listIndex++;
 		jpcIdx = cIndex;
+		
+		// add JPC instruction
 		emit(8,0,0);
 		statement(list);
 		if (error == 1)
 			return;
+		
+		// add JMP instruction
 		emit(7,0,loopIdx * 3);
 		code[jpcIdx].m = cIndex * 3;
 		return;
@@ -741,7 +750,11 @@ void statement(lexeme *list)
 		
 		// next token
 		listIndex++;
+		
+		// add read instruction
 		emit(9,0,2);
+		
+		// add STO instruction
 		emit(4, level - table[symIdx].level, table[symIdx].addr);
 		return;
 	}
@@ -754,6 +767,8 @@ void statement(lexeme *list)
 		expression(list);
 		if (error == 1)
 			return;
+		
+		// add write instruction
 		emit(9,0,1);
 		return;
 	}
@@ -789,6 +804,8 @@ void statement(lexeme *list)
 		
 		// next token
 		listIndex++;
+		
+		// add CAL instruction
 		emit(5, level - table[symIdx].level, symIdx);
 	}			    
 }
