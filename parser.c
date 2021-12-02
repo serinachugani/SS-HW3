@@ -368,12 +368,17 @@ void constDecl(lexeme *list)
 {
 	char ident[12] = "";
 	int symidx;
+	
+	// if current token is a const
 	if (list[listIndex].type == constsym)
 	{
+		// do-while loop while token is equal to comma 
 		do
 		{
+			// get next token
 			listIndex++;
 			
+			// if current token is not an identifier, send "Constant declarations should follow the pattern ident ":=" number {"," ident ":=" number}" error
 			if (list[listIndex].type != identsym)
 			{
 				printparseerror(2);
@@ -381,8 +386,10 @@ void constDecl(lexeme *list)
 				return;
 			}
 			
+			// set symidx equal to multipleDeclarationCheck
 			symidx = multipleDeclarationCheck(list[listIndex].name);
 			
+			// if nothing is found from multipleDeclarationCheck, send "Conflicting symbol declarations" error
 			if (symidx != -1)
 			{
 				printparseerror(18);
@@ -392,16 +399,20 @@ void constDecl(lexeme *list)
 			
 			// save indent name
 			strcpy(ident, list[listIndex].name);
+			// get next token
 			listIndex++;
 			
+			// if next token does not equal to assignment, send "Constant declarations should follow the pattern ident ":=" number {"," ident ":=" number}" error 
 			if (list[listIndex].type != assignsym)
 			{
 				printparseerror(2);
 				error = 1;
 				return;
 			}
+			// get next token
 			listIndex++;
 			
+			// if next token does not equal to number, send "Constant declarations should follow the pattern ident ":=" number {"," ident ":=" number}" error
 			if (list[listIndex].type != numbersym)
 			{
 				printparseerror(2);
@@ -409,19 +420,25 @@ void constDecl(lexeme *list)
 				return;
 			}
 			
+			// add to symbol table 
 			addToSymbolTable(1, ident, list[listIndex].value, level, 0, 0);
+			// get next token
 			listIndex++;
 			
 		} while (list[listIndex].type == commasym);
-			
+		
+		// if token does not equal to semi colon 
 		if (list[listIndex].type != semicolonsym)
     		{
+			// if token is equal to identifier, send "Multiple symbols in variable and constant declarations must be separated by commas" error
 			if (list[listIndex].type == identsym)
 			{
 				printparseerror(13);
 				error = 1;
 				return;
 			}
+			
+			//else, send "Symbol declarations should close with a semicolon" error
 			else
 			{
 				printparseerror(14);
@@ -429,6 +446,7 @@ void constDecl(lexeme *list)
 				return;
 			}
     		}
+		// get next token
 		listIndex++;
 	}	
 }
