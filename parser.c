@@ -460,13 +460,19 @@ int varDecl(lexeme *list)
 {
 	int numVars = 0;
 	int symidx;
+	
+	// if the token is a varsym
 	if (list[listIndex].type == varsym)
-	{
+	{	
+		// do-while loop while the token is a varsym
 		do
-		{
+		{	
 			numVars++;
-			listIndex++;
 			
+			// get next token
+			listIndex++;
+				
+			// if the token is an identsym, print out error 3 "Variable declarations should follow the pattern ident {"," ident}
 			if (list[listIndex].type != identsym)
 			{
 				printparseerror(3);
@@ -474,22 +480,30 @@ int varDecl(lexeme *list)
 				return -1;
 			}
 			
+			// set symidx equal to multiple declaration check
 			symidx = multipleDeclarationCheck(list[listIndex].name);
-			
+				
+			// if nothing is found from multipleDeclarationCheck, send "Conflicting symbol declarations" error
 			if (symidx != -1)
 			{
 				printparseerror(18);
 				error = 1;
 				return -1;
 			}
+			
+			// add token to symbol table based on level
 			if (level == 0)
 				addToSymbolTable(2, list[listIndex].name, 0, level, numVars - 1, 0);
 			else
 				addToSymbolTable(2, list[listIndex].name, 0, level, numVars + 2, 0);
+			// get the next token
 			listIndex++;
 		} while (list[listIndex].type == commasym);
+		
+		// if the token is not a semicolon
 		if (list[listIndex].type != semicolonsym)
-		{
+		{	
+			// sends error if the token is an identsym
 			if (list[listIndex].type == identsym)
 			{
 				printparseerror(13);
@@ -503,7 +517,8 @@ int varDecl(lexeme *list)
 				return -1;
 			}
 		}
-	
+		
+		// get next token
 		listIndex++;
 	}
 	return numVars;
@@ -512,10 +527,13 @@ int varDecl(lexeme *list)
 void procDecl(lexeme *list)
 {
 	int symidx;
+	// if the token is equal to procsym
 	while (list[listIndex].type == procsym)	
 	{
+		// get next token
 		listIndex++;
 		
+		// sends error if the token is not the identsym
 		if (list[listIndex].type != identsym)
 		{
 			printparseerror(4);
@@ -523,8 +541,10 @@ void procDecl(lexeme *list)
 			return;
 		}
 		
+		// set symidx to multiple declaration check
 		symidx = multipleDeclarationCheck(list[listIndex].name);
 		
+		// send error if nothing is found in the multiple declaration check
 		if (symidx != -1)
 		{
 			printparseerror(18);
@@ -532,9 +552,11 @@ void procDecl(lexeme *list)
 			return;
 		}
 		
+		// add token to symbol table and then get next token
 		addToSymbolTable(3, list[listIndex].name, 0, level, 0, 0);
 		listIndex++;
 		
+		// send error if the token is not a semicolon
 		if (list[listIndex].type != semicolonsym)
 		{
 			printparseerror(4);
@@ -542,12 +564,14 @@ void procDecl(lexeme *list)
 			return;
 		}
 		
+		// get next token
 		listIndex++;
 		
 		block(list);
 		if (error == 1)
 			return;
 		
+		// send error if the token is not a semicolon
 		if (list[listIndex].type != semicolonsym)
 		{
 			printparseerror(14);
@@ -555,6 +579,7 @@ void procDecl(lexeme *list)
 			return;
 		}
 		
+		// get next token and add RTN code
 		listIndex++;
 		emit(2, 0, 0);
 	}		
@@ -835,14 +860,18 @@ void statement(lexeme *list)
 
 void condition(lexeme *list)
 {
+	// if token is the oddsym
 	if (list[listIndex].type == oddsym)
 	{
+		// get next token
 		listIndex++;
 		expression(list);
 		if (error == 1)
 			return;
+		// add ODD code
 		emit(2, 0, 6);
 	}
+	// if token is not an oddsym, check for different codes, get next token, call expression, and then add the code with the emit function
 	else
 	{
 		expression(list);
@@ -854,6 +883,7 @@ void condition(lexeme *list)
 			expression(list);
 			if (error == 1)
 				return;
+			// add EQL code
 			emit(2, 0, 8);
 		}
 		else if (list[listIndex].type == neqsym)
@@ -862,6 +892,7 @@ void condition(lexeme *list)
 			expression(list);
 			if (error == 1)
 				return;
+			// add NEQ code
 			emit(2, 0, 9);
 		}
 		else if (list[listIndex].type == lsssym)
@@ -870,6 +901,7 @@ void condition(lexeme *list)
 			expression(list);
 			if (error == 1)
 				return;
+			// add LSS code
 			emit(2, 0, 10);
 		}
 		else if (list[listIndex].type == leqsym)
@@ -878,6 +910,7 @@ void condition(lexeme *list)
 			expression(list);
 			if (error == 1)
 				return;
+			// add LEQ code
 			emit(2, 0, 11);
 		}
 		else if (list[listIndex].type == gtrsym)
@@ -886,6 +919,7 @@ void condition(lexeme *list)
 			expression(list);
 			if (error == 1)
 				return;
+			// add GTR code
 			emit(2, 0, 12);
 		}
 		else if (list[listIndex].type == geqsym)
@@ -894,8 +928,10 @@ void condition(lexeme *list)
 			expression(list);
 			if (error == 1)
 				return;
+			// add GEQ code
 			emit(2, 0, 13);
 		}
+		// sends error "Relational operator missing from condition"
 		else
 		{
 			printparseerror(10);
