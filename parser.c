@@ -1023,19 +1023,24 @@ void term(lexeme *list)
 void factor(lexeme *list)
 {
 	int symIdx_var, symIdx_const;
+	
+	// if current token equals identifier
 	if (list[listIndex].type == identsym)
 	{
+		// find symbol 
 		symIdx_var = findSymbol(list[listIndex].name, 2);
 		symIdx_const = findSymbol(list[listIndex].name, 1);
 		
+		// if symIdx_var equals -1 and symIdx_const equals 1
 		if (symIdx_var == -1 && symIdx_const == -1)
-    		{
+    		{ 
 			if (findSymbol(list[listIndex].name, 3) != -1)
 			{
 				printparseerror(11);
 				error = 1;
 				return;
 			}
+			// else send "Undeclared identifier" error 
 			else
 			{
 				printparseerror(19);
@@ -1049,31 +1054,38 @@ void factor(lexeme *list)
 			emit(3, level - table[symIdx_var].level, table[symIdx_var].addr);
 		else 
 			emit(1, 0 , table[symIdx_const].val);
-			
+		
+		// get next token
 		listIndex++;
 	}
+	
+	// if token equals number, emit LIT and get next token
 	else if (list[listIndex].type == numbersym)
 	{
 		// emit LIT
 		emit(1, 0, list[listIndex].value);
 		listIndex++;
 	}
+	// if token equals left parentheses
  	else if (list[listIndex].type == lparensym)
  	{
+		// get next token
 		listIndex++;
+		// call expression function
 		expression(list);
 		if (error == 1)
 			return;
-		
+		// if token is not right parentheses, send "( must be followed by )" error
 		if (list[listIndex].type != rparensym)
 		{
 			printparseerror(12);
 			error = 1;
 			return;
 		}
-		
+		// get next token
 		listIndex++;	
-	}	
+	}
+	// else send "Arithmetic expressions may only contain arithmetic operators, numbers, parentheses, constants, and variables" error
 	else
 	{
 		printparseerror(11);
