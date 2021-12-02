@@ -54,18 +54,23 @@ instruction *parse(lexeme *list, int printTable, int printCode)
 	error = 0;
  
 	program(list);
-
+	
+	// If there was an error return NULL
 	if (error == 1) 
 		return NULL;
 	
+	// For vm.o
 	code[cIndex].opcode = -1;
 	
+	// Print symbol table if user requests it with -s
 	if (printTable == 1)
 		printsymboltable();
 	
+	// Print assembly code if user requests it with -a
 	if (printCode == 1)
 		printassemblycode();
 	
+	// Return code array
 	return code;
 }
 
